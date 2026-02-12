@@ -8,45 +8,46 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// ---------- HEALTH CHECK ----------
+app.get("/", (req, res) => {
+  res.send("Backend running OK");
+});
+
+// ---------- METADATA ----------
 app.get("/case-metadata", (req, res) => {
+  const filePath = path.join(__dirname, "case_metadata.json");
 
-  fs.readFile(
-    path.join(process.cwd(), "case_metadata.json"),
-    "utf8",
-    (err, data) => {
-      if (err) {
-        return res.status(500).json({
-          error: "Unable to read case metadata file"
-        });
-      }
-
-      try {
-        const jsonData = JSON.parse(data);
-        res.json(jsonData);
-      } catch {
-        res.status(500).json({
-          error: "Invalid JSON format"
-        });
-      }
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.log("Metadata file error:", err);
+      return res.status(500).json({ error: "Metadata file missing" });
     }
-  );
 
+    try {
+      res.json(JSON.parse(data));
+    } catch (e) {
+      res.status(500).json({ error: "Invalid JSON" });
+    }
+  });
 });
 
+// ---------- LLM OUTPUT ----------
 app.get("/llm-output", (req, res) => {
+  const filePath = path.join(__dirname, "bifer.md");
 
-  fs.readFile(
-    path.join(process.cwd(), "bifer.md"),
-    "utf8",
-    (err, data) => {
-      if (err) {
-        return res.status(500).send("Error reading LLM output");
-      }
-
-      res.send(data);
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.log("LLM file error:", err);
+      return res.status(500).send("LLM file missing");
     }
-  );
 
+    res.send(data);
+  });
 });
 
-module.exports = app;
+// ---------- START SERVER ----------
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
+});
