@@ -5,7 +5,7 @@ function App() {
   const [paragraphs, setParagraphs] = useState([]);
 
   useEffect(() => {
-    fetch("/api/llm-output")
+    fetch("https://readoutput-api.onrender.com/llm-output")
       .then(res => res.text())
       .then(text => {
         const parts = text
