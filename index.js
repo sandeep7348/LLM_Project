@@ -1,17 +1,16 @@
 const express = require("express");
 const fs = require("fs");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
-app.use(express.static("public"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.get("/case-metadata", (req, res) => {
 
-  fs.readFile("case_metadata.json", "utf8", (err, data) => {
+  fs.readFile(path.join(__dirname, "case_metadata.json"), "utf8", (err, data) => {
     if (err) {
       return res.status(500).json({
         error: "Unable to read case metadata file"
@@ -29,19 +28,14 @@ app.get("/case-metadata", (req, res) => {
   });
 
 });
-app.get("/llm-output", (req, res) => {
-    fs.readFile("bifer.md", "utf8", (err, data) => {
-        if (err) {
-            return res.status(500).send("Error reading LLM output");
-        }
 
-        // ✅ SEND RAW MARKDOWN / TEXT
-        res.send(data);
-    });
+app.get("/llm-output", (req, res) => {
+  fs.readFile(path.join(__dirname, "bifer.md"), "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).send("Error reading LLM output");
+    }
+    res.send(data);
+  });
 });
 
-// app.listen(3000, () => {
-//     console.log("Server running on http://localhost:3000");
-// });
-
-module.exports = app;
+const PORT = process.env.PORT || 300
