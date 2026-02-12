@@ -10,31 +10,43 @@ app.use(cors());
 
 app.get("/case-metadata", (req, res) => {
 
-  fs.readFile(path.join(__dirname, "case_metadata.json"), "utf8", (err, data) => {
-    if (err) {
-      return res.status(500).json({
-        error: "Unable to read case metadata file"
-      });
-    }
+  fs.readFile(
+    path.join(process.cwd(), "case_metadata.json"),
+    "utf8",
+    (err, data) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Unable to read case metadata file"
+        });
+      }
 
-    try {
-      const jsonData = JSON.parse(data);
-      res.json(jsonData);
-    } catch (parseError) {
-      res.status(500).json({
-        error: "Invalid JSON format"
-      });
+      try {
+        const jsonData = JSON.parse(data);
+        res.json(jsonData);
+      } catch {
+        res.status(500).json({
+          error: "Invalid JSON format"
+        });
+      }
     }
-  });
+  );
 
 });
 
 app.get("/llm-output", (req, res) => {
-  fs.readFile(path.join(__dirname, "bifer.md"), "utf8", (err, data) => {
-    if (err) {
-      return res.status(500).send("Error reading LLM output");
+
+  fs.readFile(
+    path.join(process.cwd(), "bifer.md"),
+    "utf8",
+    (err, data) => {
+      if (err) {
+        return res.status(500).send("Error reading LLM output");
+      }
+
+      res.send(data);
     }
-    res.send(data);
-  });
+  );
+
 });
 
+module.exports = app;
