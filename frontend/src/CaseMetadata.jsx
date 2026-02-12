@@ -6,7 +6,7 @@ function CaseMetadata() {
   const [metadata, setMetadata] = useState(null);
 
   useEffect(() => {
-    fetch("https://readoutput-api.onrender.com/case-metadata")
+    fetch("https://llm-project-n85g.onrender.com/case-metadata")
       .then(res => res.json())
       .then(data => setMetadata(data));
   }, []);
