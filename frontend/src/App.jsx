@@ -5,7 +5,7 @@ function App() {
   const [paragraphs, setParagraphs] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/llm-output")
+    fetch("/api/llm-output")
       .then(res => res.text())
       .then(text => {
         const parts = text

@@ -6,7 +6,7 @@ function CaseMetadata() {
   const [metadata, setMetadata] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/case-metadata")
+    fetch("/api/case-metadata")
       .then(res => res.json())
       .then(data => setMetadata(data));
   }, []);
