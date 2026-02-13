@@ -10,8 +10,8 @@ html, body {
   overflow-x: hidden;
   max-width: 100%;
   font-family: monospace;
-  background: #020617;
-  color: #e2e8f0;
+  background: #f8f8f9;
+  color: #1e1e1f;
   scroll-behavior: smooth;
 }
 
@@ -34,7 +34,7 @@ html, body {
 
 .panel {
   width: 100%;
-  background: rgba(20, 25, 40, 0.65);
+  background: white;
   border: 1px solid rgba(148,163,184,0.25);
   border-radius: 20px;
   backdrop-filter: blur(18px);
@@ -54,7 +54,7 @@ html, body {
     rgba(16,185,129,0.25)
   );
   border-bottom: 1px solid rgba(148,163,184,0.2);
-  color: #cbd5f5;
+  color:black;
 }
 
 .card-container {
@@ -80,7 +80,7 @@ html, body {
   margin: 0;
   line-height: 1.8;
   font-size: clamp(14px, 3.8vw, 16px);
-  color: #f1f5f9;
+  color: #1e1e1f;
 }
 
 .card-0 {
@@ -89,7 +89,7 @@ html, body {
     rgba(30,64,175,0.45),
     rgba(2,6,23,0.95)
   );
-  border-color: #3b82f6;
+  border-color: black;
   box-shadow:
     0 0 25px rgba(59,130,246,0.2),
     inset 0 0 20px rgba(59,130,246,0.12);
