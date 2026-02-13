@@ -31,6 +31,7 @@ function App() {
 
         <div className="card-container">
           {paragraphs.map((para, index) => (
+
             <div key={index} className={`analysis-card card-${index}`}>
               <p>{para}</p>
             </div>
