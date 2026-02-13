@@ -84,11 +84,7 @@ html, body {
 }
 
 .card-0 {
-  background: linear-gradient(
-    135deg,
-    rgba(30,64,175,0.45),
-    rgba(2,6,23,0.95)
-  );
+  background: white;
   border-color: black;
   /* box-shadow:
     0 0 25px rgba(59,130,246,0.2),
@@ -122,6 +118,7 @@ html, body {
   padding: clamp(18px, 4vw, 32px);
   background: white;
 
+
   border: 1px solid rgba(148,163,184,0.25);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -154,7 +151,7 @@ html, body {
 }
 
 .label {
-  color: #93c5fd;
+  color: black;
   font-size: clamp(13px, 3.5vw, 15px);
   opacity: 0.9;
 }
