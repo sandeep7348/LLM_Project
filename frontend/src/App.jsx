@@ -40,9 +40,9 @@ function App() {
 
       </div>
       <div className="panel">
-  <div className="panel-header">
+  {/* <div className="panel-header">
     Actions
-  </div>
+  </div> */}
 
   {/* <div className="analysis-card">
     <p className="action-text">Download Markdown</p>
