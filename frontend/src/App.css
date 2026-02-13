@@ -164,7 +164,7 @@ html, body {
 }
 
 .highlight {
-  color: #ff4ecd;
+  color: black;
   font-weight: 700;
   text-shadow: 0 0 12px rgba(255, 78, 205, 0.5);
 }
