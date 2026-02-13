@@ -44,11 +44,11 @@ function App() {
     Actions
   </div>
 
-  <div className="analysis-card">
+  {/* <div className="analysis-card">
     <p className="action-text">Download Markdown</p>
     <p className="action-text">Download PDF</p>
     <p className="action-text source-text">View Source Text</p>
-  </div>
+  </div> */}
 </div>
     
 
