@@ -1,0 +1,5 @@
+This is a Second Appeal.
+
+This is a second appeal filed under Section 331 of the Uttar Pradesh Zamindari and Land Reforms Act by Vijay Anand Sen against an order dated 21-10-2024 passed by the Additional Commissioner (Judicial), Barabanki, and an order dated 09-12-2016 passed by the Sub-Divisional Magistrate, Jalalabad, in Case No. T-20151261045484. The appeal was filed in Case No. SA/2805/2025/Shahjahanpur (Case No. R2025126102805). The appellant, through his counsel, submitted a note of withdrawal dated 10-11-2025, stating that the appeal was filed against a deceased person and is therefore not maintainable. He requested permission to withdraw the appeal with liberty to file a fresh appeal within one month. The court accepted the note of withdrawal and allowed the appeal to be withdrawn with liberty to file a fresh appeal within one month from the date of this order. The order dated 10-11-2025 is annexed to this order. Further proceedings will be conducted as per law.
+
+The first appeal was rejected because it was filed against a deceased person and was therefore not maintainable.
