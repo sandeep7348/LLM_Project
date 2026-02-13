@@ -72,13 +72,28 @@ app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
     const filePath = req.file.path;
     const fileContent = fs.readFileSync(filePath, { encoding: "base64" });
     const fileName = req.file.filename;
+    const repoPath = `uploads/${fileName}`;
+
+    let sha = undefined;
+
+    try {
+      const existingFile = await octokit.repos.getContent({
+        owner: process.env.GITHUB_OWNER,
+        repo: process.env.GITHUB_REPO,
+        path: repoPath,
+      });
+
+      sha = existingFile.data.sha;
+    } catch (e) {}
 
     await octokit.repos.createOrUpdateFileContents({
       owner: process.env.GITHUB_OWNER,
       repo: process.env.GITHUB_REPO,
-      path: `uploads/${fileName}`,
+      path: repoPath,
       message: `Upload file ${fileName}`,
       content: fileContent,
+      branch: "main",
+      sha: sha,
     });
 
     fs.unlinkSync(filePath);
@@ -89,8 +104,16 @@ app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
     });
 
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "GitHub upload failed" });
+    console.log("FULL GITHUB ERROR:", err);
+    console.log("MESSAGE:", err.message);
+    console.log("STATUS:", err.status);
+    console.log("DETAILS:", err.response?.data);
+
+    res.status(500).json({
+      error: err.message,
+      status: err.status,
+      details: err.response?.data,
+    });
   }
 });
 
