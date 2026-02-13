@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import CaseMetadata from "./CaseMetadata";
+import Form from "./Form";
 function App() {
   const [paragraphs, setParagraphs] = useState([]);
 
@@ -18,7 +19,7 @@ function App() {
 
   return (
   <div className="app-container">
-
+     <Form/>
     <div className="page-wrapper">
 
       <CaseMetadata />
