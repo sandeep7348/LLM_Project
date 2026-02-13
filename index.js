@@ -17,7 +17,7 @@ const octokit = new Octokit({
 const uploadDir = path.join(__dirname, "uploads");
 
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
@@ -29,7 +29,10 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+});
 
 app.get("/", (req, res) => {
   res.send("Backend running OK");
@@ -45,7 +48,7 @@ app.get("/case-metadata", (req, res) => {
 
     try {
       res.json(JSON.parse(data));
-    } catch (e) {
+    } catch {
       res.status(500).json({ error: "Invalid JSON" });
     }
   });
@@ -65,6 +68,8 @@ app.get("/llm-output", (req, res) => {
 
 app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
   try {
+    console.log("FILE RECEIVED:", req.file);
+
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
@@ -74,7 +79,7 @@ app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
     const fileName = req.file.filename;
     const repoPath = `uploads/${fileName}`;
 
-    let sha = undefined;
+    let sha;
 
     try {
       const existingFile = await octokit.repos.getContent({
@@ -84,7 +89,7 @@ app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
       });
 
       sha = existingFile.data.sha;
-    } catch (e) {}
+    } catch {}
 
     await octokit.repos.createOrUpdateFileContents({
       owner: process.env.GITHUB_OWNER,
@@ -93,7 +98,7 @@ app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
       message: `Upload file ${fileName}`,
       content: fileContent,
       branch: "main",
-      sha: sha,
+      sha,
     });
 
     fs.unlinkSync(filePath);
@@ -105,9 +110,6 @@ app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
 
   } catch (err) {
     console.log("FULL GITHUB ERROR:", err);
-    console.log("MESSAGE:", err.message);
-    console.log("STATUS:", err.status);
-    console.log("DETAILS:", err.response?.data);
 
     res.status(500).json({
       error: err.message,
