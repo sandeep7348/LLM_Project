@@ -15,9 +15,14 @@ const octokit = new Octokit({
 });
 
 const uploadDir = path.join(__dirname, "uploads");
+const localRepoDir = path.join(__dirname, "local_repo");
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+if (!fs.existsSync(localRepoDir)) {
+  fs.mkdirSync(localRepoDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
@@ -36,6 +41,84 @@ const upload = multer({
 
 app.get("/", (req, res) => {
   res.send("Backend running OK");
+});
+
+app.get("/read-local-file", (req, res) => {
+  try {
+    const filePath = path.join(localRepoDir, "output.md");
+    const data = fs.readFileSync(filePath, "utf8");
+    res.send(data);
+  } catch (err) {
+    res.status(500).json({ error: "Local file not found" });
+  }
+});
+
+app.get("/read-local-file/:fileName", (req, res) => {
+  try {
+    const fileName = req.params.fileName;
+    const filePath = path.join(localRepoDir, fileName);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).send("File not found");
+    }
+
+    const data = fs.readFileSync(filePath, "utf8");
+    res.send(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/read-latest-local-file", (req, res) => {
+  try {
+    const files = fs.readdirSync(localRepoDir);
+
+    if (!files.length) {
+      return res.status(404).send("No files in local repo");
+    }
+
+    const latestFile = files
+      .map(file => ({
+        name: file,
+        time: fs.statSync(path.join(localRepoDir, file)).mtime.getTime()
+      }))
+      .sort((a, b) => b.time - a.time)[0].name;
+
+    const data = fs.readFileSync(path.join(localRepoDir, latestFile), "utf8");
+
+    res.json({
+      file: latestFile,
+      content: data
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/read-algorithm-pdf", (req, res) => {
+  const filePath = "C:/Users/8YIN/OneDrive/Desktop/algorithm2e.pdf";
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      return res.status(500).send("File not found");
+    }
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.send(data);
+  });
+});
+
+app.get("/download-algorithm-pdf", (req, res) => {
+  const filePath = "C:/Users/8YIN/OneDrive/Desktop/algorithm2e.pdf";
+  res.download(filePath);
+});
+
+app.get("/stream-algorithm-pdf", (req, res) => {
+  const filePath = "C:/Users/8YIN/OneDrive/Desktop/algorithm2e.pdf";
+  const stream = fs.createReadStream(filePath);
+  res.setHeader("Content-Type", "application/pdf");
+  stream.pipe(res);
 });
 
 app.get("/case-metadata", (req, res) => {
@@ -68,8 +151,6 @@ app.get("/llm-output", (req, res) => {
 
 app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
   try {
-    console.log("FILE RECEIVED:", req.file);
-
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
@@ -109,8 +190,6 @@ app.post("/submit-case", upload.single("caseNumber"), async (req, res) => {
     });
 
   } catch (err) {
-    console.log("FULL GITHUB ERROR:", err);
-
     res.status(500).json({
       error: err.message,
       status: err.status,
